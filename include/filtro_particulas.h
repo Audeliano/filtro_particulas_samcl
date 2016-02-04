@@ -64,6 +64,9 @@ class Filtro_Particulas
 		void cloud();
 
 		void createGrids();
+		void ordenaGrid();
+		void merge_sort (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int high);
+		void merge (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int mid, const int high);
 
 		void spin();
 
@@ -88,12 +91,14 @@ class Filtro_Particulas
 		geometry_msgs::Pose2D initial_pose2_;
 
 		filtro_particulas_samcl::grid_pose_energy grid_pose_energy_[100000];
+		//filtro_particulas_samcl::grid_pose_energy grid_sorted_[100000];
 
 		double map_meta_data_;
 		double res_;
 
 		int num_part_;
 		int qtdd_laser_;
+		int qtdd_orient_;
 		double passo_base;
 		double range_max_fakelaser; //[m]
 		double error_particles_;
@@ -136,6 +141,10 @@ class Filtro_Particulas
 		int i;
 		int num_laser;
 		int num_energy_;
+		int size_grid_energy_;
+		int sorted_indice_;
+		int grid_indice_sorted_[100000];
+		double grid_sorted_[100000];
 
 		geometry_msgs::Pose2D delta_pose_;
 		geometry_msgs::Pose2D pose_anterior_;

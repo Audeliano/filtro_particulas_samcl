@@ -17,9 +17,11 @@ Filtro_Particulas::Filtro_Particulas(ros::NodeHandle n)
 	freq_ = 20.0;
 
 	num_part_ = 350;
-	qtdd_laser_ = 10;
+	qtdd_laser_ = 3; //quantidade de pontos do laser que serão lidos
+	qtdd_orient_ = 4; //quantidade de giros no mesmo pose
 	res_ = 0.0;//resolution_.resolution;
 	passo_base = 0.0;//5*res_; //0.05;//0.025;
+	map_meta_data_ = 0;
 	//cout<<"map resolution: "<<res_<<endl;
 	range_max_fakelaser = 5.6; //[m]
 	laser_noise_ = qtdd_laser_;
@@ -45,6 +47,8 @@ Filtro_Particulas::Filtro_Particulas(ros::NodeHandle n)
 	max_x_ = -10000;
 	max_y_ = -10000;
 	num_energy_ = 0;
+	size_grid_energy_ = 0;
+	sorted_indice_ = 0;
 
 	single_pose_.x = 0;
 	single_pose_.y = 0;
@@ -116,7 +120,7 @@ void Filtro_Particulas::mapCallback(const nav_msgs::MapMetaDataConstPtr& msg)
 {
 	map_meta_data_ = msg->resolution;
 	res_ = map_meta_data_;
-	passo_base = 5*res_;
+	passo_base = res_;
 	cout<<"map resolution: "<<res_<<endl;
 }
 
@@ -161,7 +165,7 @@ void Filtro_Particulas::laserCallback (const sensor_msgs::LaserScanConstPtr& sca
 	//int it = (scan->ranges.size() - 1) / (qtdd_laser_ - 1); //259 / (qtdd_laser_ - 1)
 	int it = (scan->ranges.size()) / (qtdd_laser_); // 360 / (qtdd_laser_)
 
-	cout<<"scan->ranges.size(): "<<scan->ranges.size()<<endl;
+	//cout<<"scan->ranges.size(): "<<scan->ranges.size()<<endl;
 
 	for (int laser_num = 0 ; laser_num < qtdd_laser_ ; laser_num++)
 	{
@@ -397,6 +401,7 @@ double Filtro_Particulas::findObstacle(double x, double y)
 		//cout<<"lesq: "<<landmarks_xy_[esq]<<" ; ldir: "<<landmarks_xy_[dir]<<endl;
 		//usleep(250000);
 		meio = (esq + dir) / 2;
+		//cout<<"landm: "<<landmarks_xy_[meio]<<" | obstacle_: "<<obstacle_<<endl;
 		if ( landmarks_xy_[meio] == obstacle_)
 		{
 			obstacle_finded_ = true;
@@ -668,43 +673,44 @@ void Filtro_Particulas::createGrids()
 	achou = 0;
 	total = 0;
 
-	int qtdd_orient = 6; //quantidade de giros no mesmo pose
-	double ang_it = 2 * M_PI / qtdd_orient;
-	int pose_x = 0;
-	int pose_y = 0;
+	double ang_it = 2 * M_PI / qtdd_orient_;
+	int grid_pose_x = 0;
+	int grid_pose_y = 0;
 	double it = M_PI / (qtdd_laser_);
 
 	for (int i = 0; i < num_free_; i++)
 	{
 		//ROS_INFO("For das celulas free ");
 		//carrega o xy no grid[] com indice fator=6
-		grid_pose_energy_[i*qtdd_orient].xy = free_xy_[i];
-		pose_x = free_xy_[i] / 10000;
-		pose_y = free_xy_[i] % 10000;
+		grid_pose_energy_[i*qtdd_orient_].xy = free_xy_[i];
+		grid_pose_x = (free_xy_[i] / 10000) * res_;
+		grid_pose_y = (free_xy_[i] % 10000) * res_;
+		//cout<<"pose_x: "<<grid_pose_x<<" | pose_y: "<<grid_pose_y<<endl;
+		//usleep(250000);
 
-		for(int ang_inc = 0 ; ang_inc < qtdd_orient ; ang_inc++)
+		for(int ang_inc = 0 ; ang_inc < qtdd_orient_ ; ang_inc++)
 		{
 			//ROS_INFO("For do ang_inc");
 			//carrega os outros 6 grid[].xy com o mesmo pose_xy
-			grid_pose_energy_[(i*qtdd_orient) + ang_inc + 1].xy = free_xy_[i];
-			grid_pose_energy_[(i*qtdd_orient) + ang_inc].energy = 0.0;
-			grid_pose_energy_[(i*qtdd_orient) + ang_inc].sum = 0.0;
+			grid_pose_energy_[(i*qtdd_orient_) + ang_inc + 1].xy = free_xy_[i];
+			grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy = 0.0;
+			grid_pose_energy_[(i*qtdd_orient_) + ang_inc].sum = 0.0;
 
 			for(num_laser = 0 ; num_laser < qtdd_laser_ ; num_laser++)
 			{
 				//ROS_INFO("For do num_laser ");
 				//carrega cada grid.theta com um giro diferente para cada um dos 6 pose.xy
-				grid_pose_energy_[(i*qtdd_orient) + ang_inc].theta = (ang_it * ang_inc) + gaussian(0.0, turn_noise_);
+				grid_pose_energy_[(i*qtdd_orient_) + ang_inc].theta = (ang_it * ang_inc) + gaussian(0.0, turn_noise_);
 
 				//carrega o fake_laser[].theta com cada theta-ésimo ponto do fake_laser para o mesmo grid.theta
-				fake_laser_pose_[num_laser].theta = ((ang_min_) + (num_laser * it)) + grid_pose_energy_[(i*qtdd_orient) + ang_inc].theta;
+				fake_laser_pose_[num_laser].theta = ((ang_min_) + (num_laser * it)) + grid_pose_energy_[(i*qtdd_orient_) + ang_inc].theta;
 				if(fake_laser_pose_[num_laser].theta > M_PI)
 					fake_laser_pose_[num_laser].theta -= 2.0 * M_PI;
 				if(fake_laser_pose_[num_laser].theta <= - M_PI)
 					fake_laser_pose_[num_laser].theta += 2.0 * M_PI;
 
-				fake_laser_pose_[num_laser].x = pose.x;
-				fake_laser_pose_[num_laser].y = pose.y;
+				fake_laser_pose_[num_laser].x = grid_pose_x;
+				fake_laser_pose_[num_laser].y = grid_pose_y;
 
 				//começa a varredura de cada theta-ésimo ponto do fake_laser
 				passo = 0;
@@ -715,9 +721,10 @@ void Filtro_Particulas::createGrids()
 					//ROS_INFO("For do p-interacao ");
 					//varredura do fake_laser
 					passo = passo_base * p;
-					//cout<<"passo: "<<passo<<endl;
+					//cout<<"passo: "<<passo<<" | p: "<<p<<" | iteracao: "<<iteracao<<endl;
 					x = fake_laser_pose_[num_laser].x + (cos(fake_laser_pose_[num_laser].theta) * passo);
 					y = fake_laser_pose_[num_laser].y + (sin(fake_laser_pose_[num_laser].theta) * passo);
+					//cout<<"grid_pose_x: "<<x<<" | grid_pose_y: "<<y<<endl;
 					//if(x >= 0 && y >= 0)
 					{
 						//cout<<"Nao arredondado--- "<<"x: "<<x<<"; y: "<<y<<endl;
@@ -725,14 +732,14 @@ void Filtro_Particulas::createGrids()
 						xi = x / res_;
 						yi = y / res_;
 						//cont++;
-						//cout<<"Arredondado--- "<<"xi: "<<xi<<"; yi: "<<yi<<" cont: "<<cont<<endl;
+						//cout<<"Arredondado--- "<<"xi: "<<xi<<"; yi: "<<yi<<" cont: "<<cont<<"x: "<<x<<"; y: "<<y<<endl;
 
 						findObstacle(xi, yi);
 						if (obstacle_finded_ == true)
 						{
 							fake_laser_data_[i][num_laser] = obstacle_;
 
-							//cout<<"Dist-> Particula: "<<i<<" ; num_laser: "<<num_laser<<" ; passo: "<<weight_part_laser_[i][num_laser]<<endl;
+							//cout<<"Dist-> Particula: "<<i<<" ; num_laser: "<<num_laser<<" ; passo: "<<passo<<endl;
 							p = iteracao;
 
 						}
@@ -748,25 +755,109 @@ void Filtro_Particulas::createGrids()
 				if(passo >= 0.0)
 				{
 					//somando todas as distâncias para cada giro de cada pose
-					grid_pose_energy_[(i*qtdd_orient) + ang_inc].sum += passo;
+					grid_pose_energy_[(i*qtdd_orient_) + ang_inc].sum += passo;
 					num_energy_++;
 					//cout<<"num_energy_: "<<num_energy_<<endl;
 
 					//Fazendo cálculo da energia (Ge)
-					grid_pose_energy_[(i*qtdd_orient) + ang_inc].energy += (1.0 - (passo / range_max_fakelaser));
+					grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy += (1.0 - (passo / range_max_fakelaser));
 				}
 				else
 				{
-					grid_pose_energy_[(i*qtdd_orient) + ang_inc].sum = -9999;
-					grid_pose_energy_[(i*qtdd_orient) + ang_inc].energy = -9999;
+					grid_pose_energy_[(i*qtdd_orient_) + ang_inc].sum = -9999;
+					grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy = -9999;
 				}
 			}
 			//normalizando a energia
-			grid_pose_energy_[(i*qtdd_orient) + ang_inc].energy = grid_pose_energy_[(i*qtdd_orient) + ang_inc].energy / qtdd_laser_;
+			grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy = grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy / qtdd_laser_;
+			//cout<<"num_energy_: "<<num_energy_<<" | energy: "<<grid_pose_energy_[(i*qtdd_orient_) + ang_inc].energy<<" | sum: "<<grid_pose_energy_[(i*qtdd_orient_) + ang_inc].sum<<endl;
 		}
 	}
-	cout<<"num_energy_: "<<num_energy_<<endl;
 	grids_ok_ = true;
+	ordenaGrid();
+}
+
+void Filtro_Particulas::ordenaGrid()
+{
+	int grid_indice = 0;
+	//size_grid_energy_ = num_free_ * qtdd_orient_; //no caso de todos acharem o obstacle_
+	//(num_free_xy * num_giro) = grid_sorted.size()
+
+	//carregando um vetor só com os indices dos valores positivos de energia (ie, quando cada feixe do fake_laser encontra o obstáculo)
+	for(grid_indice = 0 ; grid_indice < (num_free_ * qtdd_orient_) ; grid_indice++)
+	{
+		if(grid_pose_energy_[grid_indice].energy >= 0.0)
+		{
+			grid_indice_sorted_[sorted_indice_] = grid_indice;
+			sorted_indice_++;
+
+		}
+	}
+	size_grid_energy_ = sorted_indice_;
+	merge_sort( grid_pose_energy_, 0, (size_grid_energy_ - 1) );
+	//cout<<"Grid Energy sorted: "<<grid_pose_energy_[grid_indice_sorted_[size_grid_energy_-1]].energy<<endl;
+
+}
+
+void Filtro_Particulas::merge_sort (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int high)
+{
+	int mid;
+	if(low < high)
+	{
+		mid = (low + high) / 2;
+		merge_sort( vector, low, mid );
+		merge_sort( vector, mid + 1, high );
+		merge( vector, low, mid, high );
+	}
+
+}
+
+void Filtro_Particulas::merge (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int mid, const int high)
+{
+	double * b = new double [high + 1 - low];
+	int h,i,j,k;
+	h = low;
+	i = 0;
+	j = mid + 1;
+
+	while((h <= mid) && (j <= high))
+	{
+		//se o valor da energia da extrema esqueda for menor ou igual à energia do meio+1, o vetor b receberá o valor grid_indice
+		if(vector[grid_indice_sorted_[h]].energy <= vector[grid_indice_sorted_[j]].energy)
+		{
+			b[i] = grid_indice_sorted_[h];
+			h++;
+		}
+		else
+		{
+			b[i] = grid_indice_sorted_[j];
+			j++;
+		}
+		i++;
+	}
+	if(h > mid)
+	{
+		for(k = j ; k <= high ; k++)
+		{
+			b[i] = grid_indice_sorted_[k];
+			i++;
+		}
+	}
+	else
+	{
+		for(k = h ; k <= mid ; k++)
+		{
+			b[i] = grid_indice_sorted_[k];
+			i++;
+		}
+	}
+	//Carrega o vetor com os indices ordenados
+	for(k = 0 ; k <= high-low ; k++)
+	{
+		grid_indice_sorted_[k + low] = b[k];
+		//cout<<"Energy sorted: "<<vector[grid_indice_sorted_[k + low]].energy<<endl;
+	}
+	delete[] b;
 }
 
 void Filtro_Particulas::spin()
@@ -810,3 +901,38 @@ void Filtro_Particulas::spin()
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
