@@ -20,6 +20,7 @@
 #include <random>
 #include <cmath>
 #include <cstdlib>
+#include <chrono>
 
 #include "std_msgs/MultiArrayLayout.h"
 #include "std_msgs/MultiArrayDimension.h"
@@ -51,7 +52,6 @@ class Filtro_Particulas
 		void resample();
 		double measurementProb(int particleMP, int laserMP);
 
-		double gaussian(double mu, double sigma, double x);
 		double gaussian(double mu, double sigma);
 
 		void odomCallback (const nav_msgs::OdometryConstPtr& msg);
@@ -67,6 +67,8 @@ class Filtro_Particulas
 		void ordenaGrid();
 		void merge_sort (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int high);
 		void merge (filtro_particulas_samcl::grid_pose_energy vector[], const int low, const int mid, const int high);
+		void calculoSER();
+		bool buscaEnergiaSER();
 
 		void spin();
 
@@ -95,13 +97,19 @@ class Filtro_Particulas
 
 		double map_meta_data_;
 		double res_;
+		double map_position_x_;
+		double map_position_y_;
 
 		int num_part_;
+		int num_part_local_;
+		int num_part_global_;
 		int qtdd_laser_;
 		int qtdd_orient_;
 		double passo_base;
 		double range_max_fakelaser; //[m]
 		double error_particles_;
+		double weight_threshold_;
+		double alpha_sample_set_;
 
 		double reduz_gauss_;
 		double arctan_;
@@ -145,6 +153,12 @@ class Filtro_Particulas
 		int sorted_indice_;
 		int grid_indice_sorted_[100000];
 		double grid_sorted_[100000];
+		double laser_data_energy_;
+		int indice_busca_SER_[100000];
+		int num_particulas_SER_;
+		bool calculo_SER_loop_;
+
+		double ser_threshold_;
 
 		geometry_msgs::Pose2D delta_pose_;
 		geometry_msgs::Pose2D pose_anterior_;
@@ -153,6 +167,7 @@ class Filtro_Particulas
 
 		double laser_data_[1000];
 		double ang_min_;
+		double max_laser_range_;
 		double pose_x_;
 		double pose_y_;
 		double pose_theta_;
@@ -167,6 +182,8 @@ class Filtro_Particulas
 		double weight_part_[10000];
 		double pool_[10000];
 		double weight_ord_[10000];
+		double max_w_;
+		double media_pesos_;
 
 		bool free_ok_;
 		bool occ_ok_;
@@ -175,6 +192,7 @@ class Filtro_Particulas
 		bool zerar_deltas_;
 		int create_particle_ok_;
 		bool grids_ok_;
+		bool calculo_SER_ok_;
 
 };
 
