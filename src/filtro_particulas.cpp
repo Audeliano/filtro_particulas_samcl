@@ -38,7 +38,7 @@ Filtro_Particulas::Filtro_Particulas(ros::NodeHandle n)
 
 	ser_threshold_ = 0.02;
 
-	weight_threshold_ = 0.004;
+	weight_threshold_ = 0.0015; //0.0015 -> 0.10
 
 	alpha_sample_set_ = 0.2;
 
@@ -388,7 +388,7 @@ double Filtro_Particulas::findObstacle(double x, double y)
 
 double Filtro_Particulas::measurementProb(int particleMP, int laserMP)
 {
-	probt +=  fabs(weight_part_laser_[particleMP][laserMP] - (laser_data_[laserMP]+gaussian(0,laser_data_noise_)));
+	probt +=  fabs(weight_part_laser_[particleMP][laserMP] - (laser_data_[laserMP] + gaussian(0,laser_data_noise_)));
 
 	//probt *= gaussian(laser_data_[laserMP], laser_noise_, weight_part_laser_[particleMP][laserMP]);
 	//usleep(250000);
@@ -605,6 +605,7 @@ void Filtro_Particulas::pubInicialPose()
 		{
 			num_part_local_ = alpha_sample_set_ * num_part_;
 			ROS_INFO("ESPALHANDO AS PARTICULAS (kidnapping)");
+			calculo_SER_ok_ = false;
 		}
 		else
 			num_part_local_ = num_part_;
@@ -614,8 +615,8 @@ void Filtro_Particulas::pubInicialPose()
 		if(num_part_global_ != 0)
 		{
 			//cout<<"P_Local_: "<<num_part_local_<<" | P_Global_: "<<num_part_global_<<" | P_Total: "<<num_part_<<endl;
-			createParticles();
 			create_particle_ok_ = 1;
+			//createParticles();
 		}
 
 		//cout<<"x: "<<xmedia<<" | y: "<<ymedia<<" | theta: "<<thetamedia<<endl;
@@ -845,7 +846,7 @@ void Filtro_Particulas::calculoSER()
 			if(laser_data_[laser_num] > 0.0)
 			{
 				laser_data_energy_ += (1 - (laser_data_[laser_num] / max_laser_range_));
-				cout<<"laser_data_energy_: "<<laser_data_energy_<<endl;
+				//cout<<"laser_data_energy_: "<<laser_data_energy_<<endl;
 			}else
 			{
 				ROS_INFO("Atencao: Movimente ou gire o robo ate que o laser nao poduza mais dados NAN e INF");
@@ -855,7 +856,7 @@ void Filtro_Particulas::calculoSER()
 		}
 
 		laser_data_energy_ = laser_data_energy_ / qtdd_laser_;
-		cout<<"laser_data_energy_normalizado_: "<<laser_data_energy_<<endl;
+		//cout<<"laser_data_energy_normalizado_: "<<laser_data_energy_<<endl;
 		if(calculo_SER_loop_ == true)
 		{
 			calculo_SER_ok_ = false;
@@ -934,10 +935,10 @@ void Filtro_Particulas::spin()
 			}else if(grids_ok_ == true && odom_ok_ == true && laser_ok_ == true )
 			{
 				calculoSER();
+				if(calculo_SER_ok_ == true) buscaEnergiaSER();
 
-				if(calculo_SER_ok_ == true)
+				if(buscaEnergiaSER() == true)
 				{
-					buscaEnergiaSER();
 					//ROS_INFO("Inicio do createParticles()");
 
 					createParticles();
@@ -955,7 +956,8 @@ void Filtro_Particulas::spin()
 						moveParticles();
 						//cout<<"moveParticles()"<<endl;
 					}else if(create_particle_ok_ == 0 && zerar_deltas_ == true)
-						moveParticles();
+							moveParticles();
+
 
 				}
 			}
