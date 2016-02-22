@@ -46,62 +46,62 @@ include filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/progress.
 # Include the compile flags for this target's objects.
 include filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/flags.make
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/flags.make
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o: filtro_particulas_samcl/src/filtro_particulas.cpp
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/flags.make
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o: filtro_particulas_samcl/src/filtro_particulas_samcl.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/au/catkin_ws/src/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o -c /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o -c /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl.cpp
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.i"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas.cpp > CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.i
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.i"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl.cpp > CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.i
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.s"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas.cpp -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.s
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.s"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl.cpp -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.s
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.requires:
-.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.requires
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.requires:
+.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.requires
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.provides: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.requires
-	$(MAKE) -f filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build.make filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.provides.build
-.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.provides
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.provides: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.requires
+	$(MAKE) -f filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build.make filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.provides.build
+.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.provides
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.provides.build: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.provides.build: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/flags.make
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o: filtro_particulas_samcl/src/filtro_particulas_node.cpp
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/flags.make
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o: filtro_particulas_samcl/src/filtro_particulas_samcl_node.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/au/catkin_ws/src/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o -c /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o -c /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl_node.cpp
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.i"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_node.cpp > CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.i
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.i"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl_node.cpp > CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.i
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.s"
-	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_node.cpp -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.s
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.s"
+	cd /home/au/catkin_ws/src/filtro_particulas_samcl && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/au/catkin_ws/src/filtro_particulas_samcl/src/filtro_particulas_samcl_node.cpp -o CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.s
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.requires:
-.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.requires
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.requires:
+.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.requires
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.provides: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.requires
-	$(MAKE) -f filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build.make filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.provides.build
-.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.provides
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.provides: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.requires
+	$(MAKE) -f filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build.make filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.provides.build
+.PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.provides
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.provides.build: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.provides.build: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o
 
 # Object files for target filtro_particulas_samcl
 filtro_particulas_samcl_OBJECTS = \
-"CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o" \
-"CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o"
+"CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o" \
+"CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o"
 
 # External object files for target filtro_particulas_samcl
 filtro_particulas_samcl_EXTERNAL_OBJECTS =
 
-/home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o
-/home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o
+/home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o
+/home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o
 /home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: /opt/ros/hydro/lib/libroscpp.so
 /home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: /usr/lib/libboost_signals-mt.so
 /home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl: /usr/lib/libboost_filesystem-mt.so
@@ -128,8 +128,8 @@ filtro_particulas_samcl_EXTERNAL_OBJECTS =
 filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build: /home/au/catkin_ws/devel/lib/filtro_particulas_samcl/filtro_particulas_samcl
 .PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/build
 
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/requires: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas.cpp.o.requires
-filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/requires: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_node.cpp.o.requires
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/requires: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl.cpp.o.requires
+filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/requires: filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/src/filtro_particulas_samcl_node.cpp.o.requires
 .PHONY : filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/requires
 
 filtro_particulas_samcl/CMakeFiles/filtro_particulas_samcl.dir/clean:

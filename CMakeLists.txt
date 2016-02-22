@@ -108,8 +108,8 @@ ${Boost_INCLUDE_DIRS})
 
 ## Declare a cpp executable
 add_executable(filtro_particulas_samcl
-		src/filtro_particulas.cpp
-		src/filtro_particulas_node.cpp)
+		src/filtro_particulas_samcl.cpp
+		src/filtro_particulas_samcl_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
