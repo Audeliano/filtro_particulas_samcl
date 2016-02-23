@@ -13,14 +13,15 @@ Filtro_Particulas_Samcl::Filtro_Particulas_Samcl(ros::NodeHandle n)
 	initial_pose_pub_ = n.advertise<geometry_msgs::Pose2D>("filterparticlepose", 1, true);
 	particle_cloud_pub_ = n.advertise<geometry_msgs::PoseArray>("particlecloudAU", 2, true);
 	particle_curr_pose_pub_ = n.advertise<geometry_msgs::PoseArray>("particle_curr_pose", 2, true);
+	marker_converted_pose_pub_ = n.advertise<visualization_msgs::Marker>("visualization_mcl_pose", 10, true);
 
 //--------------------------------------------------------------------------------//
-	freq_ = 20.0;
+	freq_ = 30.0;
 
 	num_part_ = 2000;
 	num_part_local_ = 0;
 	qtdd_laser_ = 30; //quantidade de pontos do laser que serão lidos
-	qtdd_orient_ = 8; //quantidade de giros no mesmo pose. Atentar-se ao numero de free_xy. qtdd_orient*free_xy < 100mil
+	qtdd_orient_ = 18; //quantidade de giros no mesmo pose. Atentar-se ao numero de free_xy. qtdd_orient*free_xy < 100mil
 	//res_ = 0.0;//resolution_.resolution;
 	//passo_base = 0.0;//5*res_; //0.05;//0.025;
 	//map_meta_data_ = 0;
@@ -37,9 +38,9 @@ Filtro_Particulas_Samcl::Filtro_Particulas_Samcl(ros::NodeHandle n)
 
 	error_particles_ = 0.14; //0.45 ~ dist de 0.3m da particula (na media) ; 0.28 ~ 0.2m; 0.14 ~ 0.1m
 
-	ser_threshold_ = 0.035;
-	weight_threshold_ = 0.00065; //0.0015 -> 0.10
-	alpha_sample_set_ = 0.8; //80% local e 20% global
+	ser_threshold_ = 0.024;
+	weight_threshold_ = 0.00073; //0.0015 -> 0.10 //0.00065 -> 0.15
+	alpha_sample_set_ = 0.6; //80% local e 20% global
 
 //--------------------------------------------------------------------------------//
 
@@ -58,6 +59,7 @@ Filtro_Particulas_Samcl::Filtro_Particulas_Samcl(ros::NodeHandle n)
 	num_energy_ = 0;
 	size_grid_energy_ = 0;
 	sorted_indice_ = 0;
+	max_w_ = 0;
 
 	num_particulas_SER_ = 0;
 	calculo_SER_loop_ = false;
@@ -116,6 +118,8 @@ Filtro_Particulas_Samcl::Filtro_Particulas_Samcl(ros::NodeHandle n)
 	grids_ok_ = false;
 	calculo_SER_ok_ = false;
 	busca_energia_SER_ok_ = false;
+	save_initial_time_ = false;
+	time_converged_ok_ = false;
 
 }
 
@@ -215,6 +219,13 @@ void Filtro_Particulas_Samcl::odomCallback (const nav_msgs::OdometryConstPtr& ms
 	pose_theta_ = tf::getYaw(msg->pose.pose.orientation);
 
 	twist_x_ = msg->twist.twist.linear.x;
+
+	if((msg->twist.twist.linear.x != 0 || msg->twist.twist.angular.z != 0 )&& save_initial_time_ == false)
+	{
+		time_initial_sec_ = ros::Time::now();
+		save_initial_time_ = true;
+		cout<<"time_initial_sec_: "<<time_initial_sec_<<endl;
+	}
 	//cout<<"TWIST: "<<twist_x_<<endl;
 
 //	cout<<"theta: "<<pose_theta_<<" ; quat: "<<quat<<endl;
@@ -390,7 +401,7 @@ double Filtro_Particulas_Samcl::findObstacle(double x, double y)
 
 double Filtro_Particulas_Samcl::measurementProb(int particleMP, int laserMP)
 {
-	probt +=  fabs(weight_part_laser_[particleMP][laserMP] - (laser_data_[laserMP] + gaussian(0,laser_data_noise_)));
+	probt +=  fabs(weight_part_laser_[particleMP][laserMP] - (laser_data_[laserMP])); //+ gaussian(0,laser_data_noise_)));
 
 	//probt *= gaussian(laser_data_[laserMP], laser_noise_, weight_part_laser_[particleMP][laserMP]);
 	//usleep(250000);
@@ -607,6 +618,16 @@ void Filtro_Particulas_Samcl::pubInicialPose()
 
 		initial_pose_pub_.publish(initial_pose2_);
 
+		if(time_converged_ok_ == false)
+		{
+			time_converged_ok_ = true;
+			time_converged_sec_ = ros::Time::now();
+			time_to_converge_sec_ = time_converged_sec_ - time_initial_sec_;
+			cout<<"time_converged_sec_: "<<time_converged_sec_<<" | time_initial_sec_: "<<time_initial_sec_<<" | Delta Time: "<<time_to_converge_sec_<<endl;
+		}
+
+		visualizationMarker();
+
 		prim_converg_ = true;
 		//cout<<"x: "<<xmedia<<" | y: "<<ymedia<<" | theta: "<<thetamedia<<endl;
 	}
@@ -635,6 +656,50 @@ void Filtro_Particulas_Samcl::cloud()
 
 	particle_curr_pose_pub_.publish(pose_curr_msg);
 }
+
+void Filtro_Particulas_Samcl::visualizationMarker()
+{
+	points_.header.frame_id = line_strip_.header.frame_id = line_list_.header.frame_id = "map";
+	points_.header.stamp = line_strip_.header.stamp = line_list_.header.stamp = ros::Time::now();
+	points_.ns = line_strip_.ns = line_list_.ns = "points_and_lines";
+	points_.action = line_strip_.action = line_list_.action = visualization_msgs::Marker::ADD;
+
+	points_.id = 0;
+	line_strip_.id = 1;
+	line_list_.id = 2;
+
+	points_.type = visualization_msgs::Marker::POINTS;
+	line_strip_.type = visualization_msgs::Marker::LINE_STRIP;
+	line_list_.type = visualization_msgs::Marker::LINE_LIST;
+
+	// POINTS markers use x and y scale for width/height respectively
+	points_.scale.x = points_.scale.y = 0.03;
+	// LINE_STRIP/LINE_LIST markers use only the x component of scale, for the line width
+	line_strip_.scale.x = 0.1;
+	line_list_.scale.x = 0.1;
+
+	// Points are green
+	points_.color.r = 1.0;
+	points_.color.a = 1.0;
+
+	// Line strip is blue
+	line_strip_.color.b = 1.0;
+	line_strip_.color.a = 1.0;
+
+	// Line list is red
+	line_list_.color.r = 1.0;
+	line_list_.color.a = 1.0;
+
+	geometry_msgs::Point p;
+	p.x = initial_pose2_.x + map_position_x_;
+	p.y = initial_pose2_.y + map_position_y_;
+
+	points_.points.push_back(p);
+
+	marker_converted_pose_pub_.publish(points_);
+
+}
+
 
 void Filtro_Particulas_Samcl::createGrids()
 {
@@ -695,7 +760,7 @@ void Filtro_Particulas_Samcl::createGrids()
 				{
 					//ROS_INFO("For do p-interacao ");
 					//varredura do fake_laser
-					passo = (passo_base * p) + gaussian(0,laser_data_noise_);
+					passo = (passo_base * p); //+ gaussian(0,laser_data_noise_);
 					//cout<<"passo: "<<passo<<" | p: "<<p<<" | iteracao: "<<iteracao<<endl;
 					x = fake_laser_pose_[num_laser].x + (cos(fake_laser_pose_[num_laser].theta) * passo);
 					y = fake_laser_pose_[num_laser].y + (sin(fake_laser_pose_[num_laser].theta) * passo);
@@ -960,9 +1025,12 @@ void Filtro_Particulas_Samcl::spin()
 				}
 
 				calculoSER();
+
 				if(calculo_SER_ok_ == true) buscaEnergiaSER();
 
-				if(busca_energia_SER_ok_ == true)
+				if(busca_energia_SER_ok_ == false)
+					calculo_SER_ok_ = false;
+				else
 				{
 					//ROS_INFO("Inicio do createParticles()");
 					if(zerar_deltas_ == false){num_part_local_ = 0;}

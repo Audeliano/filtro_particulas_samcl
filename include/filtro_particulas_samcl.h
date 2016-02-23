@@ -7,6 +7,7 @@
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/PoseArray.h"
+#include <visualization_msgs/Marker.h>
 
 #include "map_server/image_loader.h"
 #include "nav_msgs/GetMap.h"
@@ -62,6 +63,7 @@ class Filtro_Particulas_Samcl
 
 		void pubInicialPose();
 		void cloud();
+		void visualizationMarker();
 
 		void createGrids();
 		void ordenaGrid();
@@ -86,12 +88,15 @@ class Filtro_Particulas_Samcl
 		ros::Publisher particle_cloud_pub_;
 		ros::Publisher initial_pose_pub_;
 		ros::Publisher particle_curr_pose_pub_;
+		ros::Publisher marker_converted_pose_pub_;
 
 		geometry_msgs::Pose2D single_pose_;
 		geometry_msgs::Pose2D particle_pose_[10000];
 		geometry_msgs::Pose2D particle_resample_[10000];
 		geometry_msgs::PoseWithCovarianceStamped initial_pose_;
 		geometry_msgs::Pose2D initial_pose2_;
+
+		visualization_msgs::Marker points_, line_strip_, line_list_;
 
 		filtro_particulas_samcl::grid_pose_energy grid_pose_energy_[100000];
 		//filtro_particulas_samcl::grid_pose_energy grid_sorted_[100000];
@@ -100,6 +105,13 @@ class Filtro_Particulas_Samcl
 		double res_;
 		double map_position_x_;
 		double map_position_y_;
+
+		//Variáveis para medição do tempo para as partículas convergirem
+		ros::Time time_initial_sec_;
+		ros::Time time_converged_sec_;
+		bool save_initial_time_;
+		bool time_converged_ok_;
+		ros::Duration time_to_converge_sec_;
 
 		int num_part_;
 		int num_part_local_;
